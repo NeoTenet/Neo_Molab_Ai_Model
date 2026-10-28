@@ -1,0 +1,158 @@
+# @title 💎 SamTenta / NSFQ.SAM (Verified Dual-RAM + Original Pinggy Runner)
+# @markdown Pure Python 3.10 Environment, Real Dual-RAM Injection, Original Pinggy Tunneling.
+
+import os
+import sys
+import time
+import subprocess
+import threading
+import urllib.request
+import re
+import torch
+
+def run_cmd(cmd):
+    subprocess.run(cmd, shell=True)
+
+print("═" * 70)
+print("🚀 LAUNCHING SAMTENTA / NSFQ.SAM (DUAL-RAM ENGINE)")
+print("═" * 70)
+
+if not torch.cuda.is_available():
+    raise SystemError("⚠️ کارت گرافیک متصل نیست! لطفا از منوی بالای MoLab (دکمه Compute) نوع سخت‌افزار را روی GPU بگذارید.")
+
+# ۱. دریافت یا بازنشانی سورس مخزن
+SPACE_DIR = '/content/samtenta_nsfq_space'
+os.makedirs('/content', exist_ok=True)
+
+if not os.path.exists(SPACE_DIR):
+    print("📥 Cloning SamTenta/NSFQ.SAM repository...")
+    run_cmd(f"git clone https://huggingface.co/spaces/SamTenta/NSFQ.SAM {SPACE_DIR}")
+else:
+    print("🔄 Resetting repository to clean state...")
+    run_cmd(f"cd {SPACE_DIR} && git reset --hard HEAD && git clean -fd")
+
+os.chdir(SPACE_DIR)
+
+# ۲. دانلود مستقیم فایل باینری ELF
+print("📥 Fetching verified ELF binary from Hugging Face LFS storage...")
+so_url = "https://huggingface.co/spaces/SamTenta/NSFQ.SAM/resolve/main/backend/app.cpython-310-x86_64-linux-gnu.so"
+so_target = os.path.join(SPACE_DIR, "backend", "app.cpython-310-x86_64-linux-gnu.so")
+
+os.makedirs(os.path.join(SPACE_DIR, "backend"), exist_ok=True)
+run_cmd(f"curl -L -f -s -o '{so_target}' '{so_url}'")
+
+# ۳. نصب پینگی و uv در محیط اصلی و ایجاد محیط پایتون ۳.۱۰
+print("⚙️ Preparing Python 3.10 environment & Pinggy...")
+run_cmd(f"{sys.executable} -m pip install -q uv pinggy")
+run_cmd("uv python install 3.10")
+run_cmd("uv venv --clear --python 3.10 /content/py310_env")
+
+ENV_PY = "/content/py310_env/bin/python"
+
+# ۴. نصب وابستگی‌های کامل مدل و پینگی در محیط ۳.۱۰
+print("📦 Installing verified dependencies into Python 3.10...")
+run_cmd("uv pip install --python /content/py310_env torch torchvision gradio accelerate transformers 'diffusers==0.41.0' torchao peft sentencepiece protobuf pinggy pillow")
+
+# پیکربندی بهینه Dual-RAM
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True,garbage_collection_threshold:0.8"
+os.environ["PYTHONUNBUFFERED"] = "1"
+os.environ["GRADIO_SHARE"] = "true"
+os.environ["GRADIO_SERVER_NAME"] = "0.0.0.0"
+os.environ["GRADIO_SERVER_PORT"] = "7860"
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.allow_tf32 = True
+
+run_cmd("fuser -k 7860/tcp > /dev/null 2>&1 || true")
+time.sleep(1)
+
+# ۵. شبیه‌ساز ماژول spaces برای پایتون ۳.۱۰
+SPACES_SHIM = """
+def GPU(func=None, **kwargs):
+    def decorator(fn): return fn
+    if callable(func): return func
+    return decorator
+"""
+with open(os.path.join(SPACE_DIR, "spaces.py"), "w", encoding="utf-8") as f:
+    f.write(SPACES_SHIM)
+
+site_packages = subprocess.check_output(
+    [ENV_PY, "-c", "import site; print(site.getsitepackages()[0])"],
+    text=True
+).strip()
+
+with open(os.path.join(site_packages, "spaces.py"), "w", encoding="utf-8") as f:
+    f.write(SPACES_SHIM)
+
+# ۶. اجرای سرور برنامه با موتور پایتون ۳.۱۰
+gradio_live_url = None
+print("\n⚙️ Starting backend engine...")
+proc = subprocess.Popen(
+    [ENV_PY, "-u", "app.py"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+    env=os.environ
+)
+
+def monitor():
+    global gradio_live_url
+    for line in proc.stdout:
+        print(line, end="", flush=True)
+        if "gradio.live" in line:
+            m = re.search(r'https://[a-zA-Z0-9-]+\.gradio\.live', line)
+            if m:
+                gradio_live_url = m.group(0)
+
+threading.Thread(target=monitor, daemon=True).start()
+
+# ۷. انتظار برای آنلاین شدن کامل سرور در حافظه Dual-RAM
+print("⏳ Waiting for model to load into memory...", end="", flush=True)
+for _ in range(120):
+    if proc.poll() is not None:
+        print(f"\n⚠️ Process exited early with code {proc.poll()}")
+        break
+    time.sleep(2)
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:7860", timeout=2) as resp:
+            if resp.status == 200:
+                print(" ✅ Model is Online!")
+                break
+    except Exception:
+        print(".", end="", flush=True)
+
+# ۸. استارت پینگی دقیقاً طبق ساختار کدی که فرستادی
+print("\n" + "═" * 65)
+print("🌐 GENERATING DIRECT URL FOR SAMTENTA PANEL...")
+print("═" * 65)
+
+import pinggy
+try:
+    tunnel = pinggy.start_tunnel(forwardto="localhost:7860", force=True)
+except TypeError:
+    tunnel = pinggy.start_tunnel(forwardto="localhost:7860")
+
+public_url = None
+for _ in range(30):
+    if hasattr(tunnel, "urls") and tunnel.urls:
+        for u in tunnel.urls:
+            if u.startswith("https://") and "dashboard" not in u:
+                public_url = u
+                break
+    if public_url:
+        break
+    time.sleep(1)
+
+if not public_url and hasattr(tunnel, "urls") and tunnel.urls:
+    public_url = tunnel.urls[0]
+
+# ۹. نمایش فقط لینک‌های عمومی (بدون هیچ آدرس لوکال)
+print("\n" + "╔" + "═" * 63 + "╗")
+if public_url and not public_url.startswith("http://127.0.0.1"):
+    print(f"║ 🚀 ورود به پنل (لینک مستقیم پینگی): {public_url}")
+if gradio_live_url:
+    print(f"║ 🌟 ورود به پنل (لینک گرادیو)      : {gradio_live_url}")
+print("╚" + "═" * 63 + "╝\n")
+print("👈 روی لینک آبی رنگ بالا کلیک کنید تا پنل مستقیماً روی مرورگر باز شود.")
+
+while True:
+    time.sleep(1)

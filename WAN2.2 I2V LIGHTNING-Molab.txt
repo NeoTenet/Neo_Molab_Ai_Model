@@ -1,0 +1,227 @@
+# @title Wan 2.2 14B I2V Studio (ftfy & Video Modules Fixed)
+# @markdown Adds ftfy, imageio, and ffmpeg dependencies to allow smooth video rendering and export.
+
+import os
+import sys
+import time
+import urllib.request
+import subprocess
+import threading
+import site
+import torch
+
+def run_cmd(cmd):
+    subprocess.run(cmd, shell=True)
+
+print("═" * 65)
+print("🎬 LAUNCHING WAN 2.2 14B (Rchoks/wan555) - DUAL-RAM ENGINE")
+print("═" * 65)
+
+if not torch.cuda.is_available():
+    raise SystemError("⚠️ GPU acceleration required! Ensure GPU runtime is active.")
+
+# ۱. پیکربندی حافظه و محیط اجرایی
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True,garbage_collection_threshold:0.8"
+os.environ["PYTHONUNBUFFERED"] = "1"
+os.environ["TOKENIZERS_PARALLELISM"] = "true"
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.allow_tf32 = True
+
+vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
+print(f"• Dedicated VRAM : {vram_gb:.2f} GB")
+print("• Memory Mode    : Dual-RAM Hybrid (CPU RAM + GPU VRAM Offload)")
+
+# آزادسازی پورت‌ها
+run_cmd("fuser -k 7860/tcp > /dev/null 2>&1 || true")
+time.sleep(1)
+
+# ۲. کلون مخزن رسمی Rchoks/wan555
+WAN_DIR = '/content/wan555_app'
+os.makedirs('/content', exist_ok=True)
+
+if not os.path.exists(WAN_DIR):
+    print("\n📥 در حال دانلود مخزن رسمی Rchoks/wan555 از هاگینگ‌فیس...")
+    run_cmd(f"git clone https://huggingface.co/spaces/Rchoks/wan555 {WAN_DIR}")
+
+os.chdir(WAN_DIR)
+
+# ۳. نصب تمام پیش‌نیازها به همراه ftfy و ماژول‌های ویدیویی (حل خطای ftfy)
+print("\n📦 در حال نصب و آپدیت پیش‌نیازها (ftfy, imageio, diffusers)...")
+run_cmd(
+    f"{sys.executable} -m pip install -q --upgrade "
+    f"ftfy imageio imageio-ffmpeg av "
+    f"git+https://github.com/huggingface/diffusers.git "
+    f"transformers accelerate torchvision pillow gradio pinggy torchao sentencepiece protobuf"
+)
+
+# ۴. رفع قطعی خطای spaces و ساخت پکیج spaces.zero
+SPACES_SHIM = """
+class _ZeroAOTI:
+    class ZeroGPUCompiledModel:
+        pass
+
+class _ZeroTorch:
+    aoti = _ZeroAOTI()
+
+class _Zero:
+    torch = _ZeroTorch()
+
+zero = _Zero()
+
+def GPU(func=None, **kwargs):
+    def decorator(fn):
+        return fn
+    if callable(func):
+        return func
+    return decorator
+
+def aoti_load(model=None, *args, **kwargs):
+    return model
+
+def aoti_blocks_load(*args, **kwargs):
+    pass
+
+def __getattr__(name):
+    def _fallback(first=None, *args, **kwargs):
+        return first
+    return _fallback
+"""
+
+spaces_dir = os.path.join(WAN_DIR, "spaces")
+os.makedirs(spaces_dir, exist_ok=True)
+with open(os.path.join(spaces_dir, "__init__.py"), "w", encoding="utf-8") as f:
+    f.write(SPACES_SHIM)
+
+with open(os.path.join(WAN_DIR, "spaces.py"), "w", encoding="utf-8") as f:
+    f.write(SPACES_SHIM)
+
+for sp in site.getsitepackages():
+    try:
+        sp_pkg = os.path.join(sp, "spaces")
+        os.makedirs(sp_pkg, exist_ok=True)
+        with open(os.path.join(sp_pkg, "__init__.py"), "w", encoding="utf-8") as f:
+            f.write(SPACES_SHIM)
+        with open(os.path.join(sp_pkg, "spaces.py"), "w", encoding="utf-8") as f:
+            f.write(SPACES_SHIM)
+    except Exception:
+        pass
+
+# ۵. خنثی‌سازی کامل aoti.py
+aoti_dummy = """
+class ZeroGPUCompiledModel:
+    pass
+
+def aoti_blocks_load(*args, **kwargs):
+    pass
+
+def aoti_load(model=None, *args, **kwargs):
+    return model
+
+def __getattr__(name):
+    def _fallback(first=None, *args, **kwargs):
+        return first
+    return _fallback
+"""
+with open(os.path.join(WAN_DIR, "aoti.py"), "w", encoding="utf-8") as f:
+    f.write(aoti_dummy)
+
+# ۶. باینری frpc برای لینک گرادیو
+try:
+    import gradio
+    g_dir = os.path.dirname(gradio.__file__)
+    frpc_file = os.path.join(g_dir, "frpc_linux_amd64_v0.3")
+    if not os.path.exists(frpc_file):
+        run_cmd(f"curl -fsSL https://cdn-media.huggingface.co/frpc-subdomain/assets/frpc_linux_amd64 -o {frpc_file} && chmod +x {frpc_file}")
+except Exception:
+    pass
+
+# ۷. پیکربندی Dual-RAM و حذف سانسور
+print("\n⚙️ Configuring Dual-RAM memory split and uncensored generation...")
+app_file = os.path.join(WAN_DIR, 'app.py')
+
+with open(app_file, 'r', encoding='utf-8') as f:
+    code = f.read()
+
+code = code.replace(".to('cuda')", "")
+code = code.replace('.to("cuda")', "")
+
+if "pipe.enable_model_cpu_offload()" not in code:
+    injection = """
+pipe.enable_model_cpu_offload()
+if hasattr(pipe, 'vae') and hasattr(pipe.vae, 'enable_tiling'):
+    pipe.vae.enable_tiling()
+if hasattr(pipe, 'safety_checker'):
+    pipe.safety_checker = None
+"""
+    if "original_scheduler =" in code:
+        code = code.replace("original_scheduler =", injection + "\noriginal_scheduler =")
+
+if "demo.queue().launch(" in code:
+    code = code.replace("demo.queue().launch(", "demo.queue().launch(share=True, server_name='0.0.0.0', server_port=7860, inbrowser=False, ")
+elif "demo.launch(" in code:
+    code = code.replace("demo.launch(", "demo.launch(share=True, server_name='0.0.0.0', server_port=7860, inbrowser=False, ")
+
+with open(app_file, 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("✅ ftfy ready, Dual-RAM configured!")
+
+# ۸. اجرای سرور گرادیو
+print("\n" + "═" * 65)
+print("🚀 STARTING WAN 2.2 ENGINE & GRADIO SERVER...")
+print("═" * 65 + "\n")
+
+proc = subprocess.Popen(
+    [sys.executable, "-u", "app.py"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+    env=os.environ
+)
+
+def log_stream():
+    for line in proc.stdout:
+        print(line, end="", flush=True)
+
+threading.Thread(target=log_stream, daemon=True).start()
+
+# ۹. تست سلامت پورت ۷۸۶۰ و ساخت لینک پینگی
+server_ready = False
+for _ in range(150):
+    time.sleep(2)
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:7860", timeout=2) as resp:
+            if resp.status == 200:
+                server_ready = True
+                print("\n✅ سرور با موفقیت فعال شد!")
+                break
+    except Exception:
+        pass
+
+import pinggy
+try:
+    tunnel = pinggy.start_tunnel(forwardto="localhost:7860", force=True)
+except Exception:
+    tunnel = pinggy.start_tunnel(forwardto="localhost:7860")
+
+pinggy_url = None
+for _ in range(25):
+    if hasattr(tunnel, "urls") and tunnel.urls:
+        for u in tunnel.urls:
+            if u.startswith("https://") and "dashboard" not in u:
+                pinggy_url = u
+                break
+    if pinggy_url:
+        break
+    time.sleep(1)
+
+if not pinggy_url and hasattr(tunnel, "urls") and tunnel.urls:
+    pinggy_url = tunnel.urls[0]
+
+print("\n" + "╔" + "═" * 63 + "╗")
+print(f"║ 🔗 لینک ورود پینگی : {pinggy_url}")
+print("╚" + "═" * 63 + "╝")
+print("📌 لینک رسمی گرادیو (Running on public URL) نیز در لاگ‌های بالا چاپ می‌شود.\n")
+
+while True:
+    time.sleep(1)
