@@ -27,7 +27,7 @@
 | # | فایل اصلی | فایل خروجی / نگهداری‌شده | نام پروژه و کاربرد |
 |---|---|---|---|
 | 1 | `Qwen Image 2.1 Turbo-Molab.txt` | [`molab/Qwen_Image_2_1_Turbo_MoLab.py`](molab/Qwen_Image_2_1_Turbo_MoLab.py) | **Qwen-Image-2.1-Turbo** — اسکریپت راه‌اندازی مسیر تولید تصویر با رابط وب Gradio؛ وابستگی‌ها را آماده می‌کند و برای دسترسی به رابط تلاش می‌کند لینک عمومی بسازد. |
-| 2 | `Qwen Image V2 30B-Molab.txt` | [`molab/SamTenta_NSFQ_SAM_MoLab.py`](molab/SamTenta_NSFQ_SAM_MoLab.py) | **SamTenta / NSFQ.SAM** — کد داخل فایل به مخزن NSFQ.SAM اشاره می‌کند و محیط برنامه و سرویس وب را آماده می‌سازد. عنوان فایل TXT با پروژه‌ی واقعی داخل کد مطابقت کامل ندارد؛ به همین دلیل آن را به‌اشتباه Qwen Image V2 30B معرفی نمی‌کنیم. |
+| 2 | `Qwen Image V2 30B-Molab.txt` | [`molab/SamTenta_NSFQ_SAM_MoLab.py`](molab/Qwen Image V2 30B-Molab.py) | **SamTenta / NSFQ.SAM** — کد داخل فایل به مخزن NSFQ.SAM اشاره می‌کند و محیط برنامه و سرویس وب را آماده می‌سازد. عنوان فایل TXT با پروژه‌ی واقعی داخل کد مطابقت کامل ندارد؛ به همین دلیل آن را به‌اشتباه Qwen Image V2 30B معرفی نمی‌کنیم. |
 | 3 | `WAN2.2 I2V LIGHTNING-Molab.txt` | [`molab/WAN22_I2V_Lightning_MoLab.py`](molab/WAN2.2_I2V_Lightning_MoLab.py) | **Wan 2.2 14B I2V Lightning** — مسیر راه‌اندازی رابط وب برای تولید ویدئو از تصویر (Image-to-Video یا I2V). اجرای موفق به منابع GPU و وابستگی‌های پروژه‌ی اصلی بستگی دارد. |
 
 ### کاربردها به زبان ساده
