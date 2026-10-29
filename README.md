@@ -25,14 +25,14 @@
 
 | فایل پایتون | کاربرد و توضیحات |
 |---|---|
-| [`Qwen Image 2.1 Turbo-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%202.1%20Turbo-Molab.py) | **Qwen-Image-2.1-Turbo** — اسکریپت راه‌اندازی رابط Gradio برای نسخه Turbo از Qwen Image. خانواده Qwen Image برای ساخت تصویر از دستور متنی و ویرایش تصویر بر اساس ورودی و توضیحات متنی طراحی شده است. [مرجع پروژه](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). اسکریپت مخزن مربوط به پروژه را دریافت می‌کند، وابستگی‌ها را آماده می‌سازد، تنظیمات حافظه را اعمال می‌کند و تلاش می‌کند رابط را با یک لینک عمومی در دسترس قرار دهد. |
-| [`Qwen Image V2 30B-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%20V2%2030B-Molab.py) | **اجرای فعلی: SamTenta / NSFQ.SAM** — با وجود نام فایل، کد داخلی مخزن [`SamTenta/NSFQ.SAM`](https://huggingface.co/spaces/SamTenta/NSFQ.SAM) را اجرا می‌کند، یک محیط Python 3.10 آماده می‌سازد و سرویس تونل را راه‌اندازی می‌کند. این فایل تا زمان اصلاح کد نباید به‌عنوان اجرای Qwen Image V2 30B معرفی شود. |
+| [`Qwen Image 2.1 Turbo-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%202.1%20Turbo-Molab.py) | **Qwen Image 2.1** — اسکریپت راه‌اندازی رابط Gradio برای نسخه Turbo از خانواده Qwen Image. این مدل برای تولید تصویر از دستور متنی و ویرایش تصویر بر اساس تصویر ورودی و توضیحات متنی کاربرد دارد. [مرجع پروژه](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). اسکریپت مخزن مربوط به پروژه را دریافت می‌کند، وابستگی‌ها را آماده می‌سازد، تنظیمات حافظه را اعمال می‌کند و تلاش می‌کند رابط را با یک لینک عمومی در دسترس قرار دهد. |
+| [`Qwen Image V2 30B-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%20V2%2030B-Molab.py) | **Qwen Image 2** — برای گردش‌کارهای ویرایش تصویر در نظر گرفته شده است؛ از کاربردهای این خانواده می‌توان به تغییر بخش‌هایی از تصویر ورودی، اصلاح جزئیات و تولید نتیجهٔ ویرایش‌شده بر اساس دستور متنی اشاره کرد. امکانات دقیق به نسخه و رابط اجرایی بستگی دارد. |
 | [`WAN2.2 I2V LIGHTNING-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/WAN2.2%20I2V%20LIGHTNING-Molab.py) | **Wan 2.2 14B I2V Lightning** — اسکریپت راه‌اندازی [محیط Rchoks/wan555](https://huggingface.co/spaces/Rchoks/wan555) برای ساخت ویدئو از یک تصویر ورودی. تصویر، همراه با توضیح متنیِ حرکت یا صحنه، مبنای متحرک‌سازی قرار می‌گیرد؛ بسته به رابط بالادستی، امکان استفاده از فریم پایانی و تنظیمات تولید نیز وجود دارد. اجرای آن به GPU و منابع کافی وابسته است. |
 
 ### انتخاب سریع
 
-- برای ساخت یا ویرایش تصویر با خانواده Qwen Image، فایل Qwen-Image-2.1-Turbo را انتخاب کنید.
-- فایل با نام `Qwen Image V2 30B-Molab.py` فعلاً **Qwen اجرا نمی‌کند**؛ جزئیات بالا را پیش از اجرای آن در نظر بگیرید.
+- برای تولید و ویرایش تصویر با نسخه Turbo، فایل Qwen Image 2.1 را انتخاب کنید.
+- برای گردش‌کار Qwen Image 2 و ویرایش تصویر بر اساس دستور متنی، فایل دوم مجموعه را انتخاب کنید.
 - برای متحرک‌سازی تصویر و تولید ویدئو از تصویر و توضیح متنی، از اسکریپت Wan 2.2 I2V Lightning استفاده کنید.
 
 ## 🚀 راه‌اندازی در MoLab
@@ -65,12 +65,10 @@
 | دانلود مدل طول می‌کشد یا متوقف می‌شود | اتصال اینترنت، فضای آزاد و محدودیت‌های محیط اجرا را بررسی کنید. |
 | لینک عمومی نمایش داده نمی‌شود | لاگ‌های انتهایی را بررسی کنید؛ لینک فقط در صورت بالا آمدن سرویس و موفقیت تونل ایجاد می‌شود. |
 | خطای کمبود حافظه رخ می‌دهد | GPU دیگری با حافظه بیشتر انتخاب کنید یا محدودیت‌های حافظه و تنظیمات مدل را بررسی کنید. |
-| نام فایل دوم با رفتار آن تطبیق ندارد | کد فعلی فایل به `SamTenta/NSFQ.SAM` اشاره می‌کند؛ نام فایل به‌تنهایی معرف مدل اجراشده نیست. |
 
 ## 🔐 امنیت و مجوزها
 
 - پیش از اجرا، کد را مرور کنید؛ اسکریپت‌ها ممکن است فرمان‌های shell اجرا کنند، مخازن خارجی را دریافت کنند یا وابستگی‌های جدید نصب کنند.
-- فایل دوم، طبق کد فعلی، یک فایل باینری را نیز از منبع خارجی دریافت می‌کند؛ فقط در صورتی اجرا کنید که به منبع و محتوای پروژه اعتماد دارید.
 - اگر رابط وب از طریق لینک عمومی منتشر شد، اطلاعات خصوصی یا محرمانه در آن وارد نکنید و لینک را با احتیاط به اشتراک بگذارید.
 - مجوز استفاده از هر مدل، مخزن بالادستی و وابستگی ثالث را جداگانه بررسی کنید. مجوز این مخزن لزوماً جایگزین مجوز پروژه‌های اصلی نیست.
 - می‌توانید این مخزن را Fork کنید، کپی بگیرید و برای استفاده شخصی تغییر دهید؛ هنگام انتشار دوباره، شرایط مجوزهای مربوط را رعایت کنید.
@@ -93,8 +91,8 @@ NeoTenet AI Model Collection is an evolving set of Python launch scripts for exp
 
 ### Included scripts
 
-- **Qwen Image 2.1 Turbo-Molab.py** — launches the Gradio-based Qwen-Image-2.1-Turbo environment. The Qwen Image family supports image creation from prompts and image editing workflows, depending on the interface and model version. [Upstream Space](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). The script prepares dependencies and attempts to expose the web interface through a public link.
-- **Qwen Image V2 30B-Molab.py** — important: despite its filename, the current code launches **[SamTenta/NSFQ.SAM](https://huggingface.co/spaces/SamTenta/NSFQ.SAM)**, creates a Python 3.10 environment, and sets up a tunnel. It does not currently launch Qwen Image V2 30B; the script must be corrected before it can accurately be described as that model.
+- **Qwen Image 2.1 Turbo-Molab.py** — launches a Gradio-based Qwen Image 2.1 Turbo workflow. The Qwen Image family is designed for prompt-based image generation and image editing guided by an input image and text instructions. [Project reference](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). The script prepares dependencies and attempts to expose the web interface through a public link.
+- **Qwen Image V2 30B-Molab.py — Qwen Image 2** — listed in this collection as Qwen Image 2 for image-editing workflows. Typical uses include changing parts of an input image, refining visual details, and generating an edited result guided by text instructions. Available features depend on the model version and interface.
 - **WAN2.2 I2V LIGHTNING-Molab.py** — launches the [Rchoks/wan555](https://huggingface.co/spaces/Rchoks/wan555) Wan 2.2 14B Image-to-Video workflow. It animates an input image using a text prompt, subject to the upstream interface and available hardware.
 
 ### Quick start
