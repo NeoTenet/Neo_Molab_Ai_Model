@@ -1,122 +1,124 @@
 <div align="center">
 
-# 💎 NeoTenet AI Models — MoLab Collection
+# 💎 NeoTenet AI Model Collection
 
-### مجموعه‌ای به‌روزرسانی‌شونده از نسخه‌ها و ابزارهای هوش مصنوعی برای تولید تصویر و ویدئو
+**A growing collection of Python launch scripts for exploring and running different AI projects in MoLab and compatible GPU environments.**
 
-**سازنده و نگه‌دارنده پروژه: NeoTenet**  
-📣 کانال تلگرام: [T.me/NeoTenet](https://t.me/NeoTenet)  
-🧪 [محیط MoLab](https://molab.marimo.io/notebooks) · [مستندات marimo](https://docs.marimo.io/)
+[![GitHub](https://img.shields.io/badge/GitHub-NeoTenet-181717?logo=github)](https://github.com/NeoTenet)
+[![Python](https://img.shields.io/badge/Python-Scripts-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![MoLab](https://img.shields.io/badge/Run%20with-MoLab-6C5CE7)](https://molab.marimo.io/notebooks)
+[![Telegram](https://img.shields.io/badge/Telegram-%40NeoTenet-26A5E4?logo=telegram&logoColor=white)](https://t.me/NeoTenet)
+
+**Created and maintained by [NeoTenet](https://github.com/NeoTenet)** · [Telegram Channel](https://t.me/NeoTenet)
 
 </div>
 
 ---
 
-## 🌌 درباره پروژه
+## 🇮🇷 درباره پروژه
 
-این مخزن یک مجموعه‌ی پویا از اسکریپت‌ها و ابزارهای هوش مصنوعی است که توسط **NeoTenet** گردآوری و به‌روزرسانی می‌شود. هدف این پروژه، جمع‌آوری نسخه‌های مختلف ابزارها و مدل‌های تولید تصویر، ویرایش تصویر و تولید ویدئو در یک مخزن مرتب و مستند است تا کاربران بتوانند پروژه‌ها را بشناسند، نسخه‌ی مناسب خود را انتخاب کنند و مراحل راه‌اندازی را دنبال کنند.
+این مخزن مجموعه‌ای در حال توسعه از اسکریپت‌های پایتونی برای راه‌اندازی و آزمایش پروژه‌های مختلف هوش مصنوعی است. هدف، قرار دادن ابزارها در یک محل منظم، توضیح کاربرد هرکدام و ساده‌تر کردن شروع کار در MoLab یا محیط‌های سازگار با Python و GPU است.
 
-**این پروژه به مرور به‌روزرسانی خواهد شد.** با آماده‌شدن نسخه‌های تازه، تغییر روش اجرای پروژه‌های اصلی، اصلاحات سازگاری یا اضافه‌شدن ابزارهای جدید، فایل‌ها و راهنماها نیز به‌روز می‌شوند. برای پیگیری تغییرات، تاریخچه‌ی Commits و نسخه‌ی جاری مخزن را بررسی کنید.
+مجموعه به‌مرور به‌روزرسانی می‌شود؛ ممکن است نسخه‌های جدید، ابزارهای متفاوت یا اصلاحات مربوط به اجرای مدل‌ها به آن اضافه شوند. برای اطلاع از تغییرات، تاریخچهٔ مخزن را بررسی کنید.
 
-> **شفافیت:** این مخزن فایل‌های راه‌اندازی و مستندات پروژه‌های بالادستی (upstream) را کنار هم قرار می‌دهد. مدل‌ها و مخازن اصلی متعلق به سازندگان خودشان هستند. اجرای واقعی مدل‌ها به سخت‌افزار، وابستگی‌ها، وضعیت مخزن اصلی و محیط اجرا بستگی دارد؛ اجرای کامل همه مدل‌ها روی GPU در این بسته تضمین نشده است.
+> **نکته درباره تطابق نام و کد:** در نسخه فعلی مخزن، فایل `Qwen Image V2 30B-Molab.py` در واقع فضای `SamTenta/NSFQ.SAM` را دریافت و اجرا می‌کند؛ بنابراین کد فعلی آن، اجرای Qwen Image V2 30B نیست. برای معرفی آن به‌عنوان مدل Qwen، ابتدا باید خود اسکریپت اصلاح شود. این README رفتار فعلی کد را پنهان نمی‌کند تا هنگام اجرا سردرگمی ایجاد نشود.
 
-## 🧠 معرفی سه فایل اصلی
+## 🧠 فایل‌های موجود
 
-این نسخه فقط شامل **سه اسکریپت تبدیل‌شده به اپلیکیشن‌های Python بومی marimo** است.
+| فایل پایتون | کاربرد و توضیحات |
+|---|---|
+| [`Qwen Image 2.1 Turbo-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%202.1%20Turbo-Molab.py) | **Qwen-Image-2.1-Turbo** — اسکریپت راه‌اندازی رابط Gradio برای نسخه Turbo از Qwen Image. خانواده Qwen Image برای ساخت تصویر از دستور متنی و ویرایش تصویر بر اساس ورودی و توضیحات متنی طراحی شده است. [مرجع پروژه](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). اسکریپت مخزن مربوط به پروژه را دریافت می‌کند، وابستگی‌ها را آماده می‌سازد، تنظیمات حافظه را اعمال می‌کند و تلاش می‌کند رابط را با یک لینک عمومی در دسترس قرار دهد. |
+| [`Qwen Image V2 30B-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/Qwen%20Image%20V2%2030B-Molab.py) | **اجرای فعلی: SamTenta / NSFQ.SAM** — با وجود نام فایل، کد داخلی مخزن [`SamTenta/NSFQ.SAM`](https://huggingface.co/spaces/SamTenta/NSFQ.SAM) را اجرا می‌کند، یک محیط Python 3.10 آماده می‌سازد و سرویس تونل را راه‌اندازی می‌کند. این فایل تا زمان اصلاح کد نباید به‌عنوان اجرای Qwen Image V2 30B معرفی شود. |
+| [`WAN2.2 I2V LIGHTNING-Molab.py`](https://github.com/NeoTenet/Neo_Molab_Ai_Model/blob/main/WAN2.2%20I2V%20LIGHTNING-Molab.py) | **Wan 2.2 14B I2V Lightning** — اسکریپت راه‌اندازی [محیط Rchoks/wan555](https://huggingface.co/spaces/Rchoks/wan555) برای ساخت ویدئو از یک تصویر ورودی. تصویر، همراه با توضیح متنیِ حرکت یا صحنه، مبنای متحرک‌سازی قرار می‌گیرد؛ بسته به رابط بالادستی، امکان استفاده از فریم پایانی و تنظیمات تولید نیز وجود دارد. اجرای آن به GPU و منابع کافی وابسته است. |
 
-| # | فایل اصلی | فایل خروجی / نگهداری‌شده | نام پروژه و کاربرد |
-|---|---|---|---|
-| 1 | `Qwen Image 2.1 Turbo-Molab.txt` | [`molab/Qwen_Image_2_1_Turbo_MoLab.py`](molab/Qwen_Image_2_1_Turbo_MoLab.py) | **Qwen-Image-2.1-Turbo** — اسکریپت راه‌اندازی مسیر تولید تصویر با رابط وب Gradio؛ وابستگی‌ها را آماده می‌کند و برای دسترسی به رابط تلاش می‌کند لینک عمومی بسازد. |
-| 2 | `Qwen Image V2 30B-Molab.py` | [`Qwen Image V2 30B-Molab.py`](molab/Qwen Image V2 30B-Molab.py) | **/Qwen Image V2 30B-Molab.py** — کد داخل فایل به مخزن Qwen Image V2 30B-Molab.py اشاره می‌کند و محیط برنامه و سرویس وب را آماده می‌سازد. عنوان فایل TXT با پروژه‌ی واقعی داخل کد مطابقت کامل ندارد؛ به همین دلیل آن را به‌اشتباه Qwen Image V2 30B معرفی نمی‌کنیم. |
-| 3 | `WAN2.2 I2V LIGHTNING-Molab.py` | [`molab/WAN22_I2V_Lightning_MoLab.py`](molab/WAN2.2_I2V_Lightning_MoLab.py) | **Wan 2.2 14B I2V Lightning** — مسیر راه‌اندازی رابط وب برای تولید ویدئو از تصویر (Image-to-Video یا I2V). اجرای موفق به منابع GPU و وابستگی‌های پروژه‌ی اصلی بستگی دارد. |
+### انتخاب سریع
 
-### کاربردها به زبان ساده
+- برای ساخت یا ویرایش تصویر با خانواده Qwen Image، فایل Qwen-Image-2.1-Turbo را انتخاب کنید.
+- فایل با نام `Qwen Image V2 30B-Molab.py` فعلاً **Qwen اجرا نمی‌کند**؛ جزئیات بالا را پیش از اجرای آن در نظر بگیرید.
+- برای متحرک‌سازی تصویر و تولید ویدئو از تصویر و توضیح متنی، از اسکریپت Wan 2.2 I2V Lightning استفاده کنید.
 
-- **Qwen Image 2.1 Turbo:** راه‌اندازی مسیر تولید تصویر از طریق رابط وب.
-- **SamTenta / NSFQ.SAM:** پروژه‌ای که کد فایل TXT دوم واقعاً به آن اشاره می‌کند؛ نام فایل منبع با محتوای داخل آن هم‌خوانی کامل ندارد.
-- **Wan 2.2 I2V Lightning:** مسیر تولید ویدئو از یک تصویر ورودی.
+## 🚀 راه‌اندازی در MoLab
 
-این توضیحات بر پایه‌ی نام و محتوای فایل‌های ارسالی تهیه شده‌اند. برای اطلاعات نهایی درباره‌ی قابلیت‌ها، نسخه‌ها و مجوزها، صفحه‌ی مخزن اصلی هر پروژه را نیز بررسی کنید.
+1. وارد [MoLab](https://molab.marimo.io/notebooks) شوید و یک محیط Python مناسب ایجاد کنید.
+2. در صورت امکان، فایل پایتون موردنظر را در محیط باز یا وارد کنید. اگر محیط شما اجرای مستقیم فایل را پشتیبانی نمی‌کند، محتوای فایل را در سلول Python قرار دهید و اجرا کنید.
+3. برای اسکریپت‌هایی که به شتاب‌دهنده نیاز دارند، از فعال بودن GPU مطمئن شوید.
+4. اجرای اسکریپت را شروع کنید و خروجی را بررسی کنید. اسکریپت‌ها ممکن است مخزن بالادستی را دریافت، وابستگی‌ها را نصب و فایل‌های مدل را دانلود کنند؛ مرحلهٔ آماده‌سازی می‌تواند زمان‌بر باشد.
+5. اگر راه‌اندازی رابط وب موفق باشد، آدرس آن در خروجی یا لاگ‌ها نمایش داده می‌شود. تا پایان استفاده، فرایند اجرا را متوقف نکنید.
+6. برای پایان کار، اجرای سلول یا فرایند Python را متوقف کنید.
 
-## 🗂️ ساختار مخزن
-
-```text
-NeoTenet-MoLab-Native-Pack/
-├── README.md
-├── MANIFEST.json
-├── molab/
-│   ├── Qwen_Image_2_1_Turbo_MoLab.py
-│   ├── SamTenta_NSFQ_SAM_MoLab.py
-│   └── WAN22_I2V_Lightning_MoLab.py
-└── original_sources/
-    ├── Qwen Image 2.1 Turbo-Molab.txt
-    ├── Qwen Image V2 30B-Molab.txt
-    └── WAN2.2 I2V LIGHTNING-Molab.txt
-```
-
-- `molab/`: سه اپلیکیشن Python در قالب marimo که متن منبع TXTها را حفظ می‌کنند.
-- `original_sources/`: سه فایل TXT اصلی برای آرشیو و مقایسه.
-- `MANIFEST.json`: فهرست فایل‌ها و هش‌های SHA-256 جهت بررسی یکپارچگی.
-
-## 🚀 روش اجرا
-
-### اجرای سه اسکریپت در MoLab / marimo
-
-1. وارد [MoLab](https://molab.marimo.io/notebooks) شوید.
-2. از مخزن GitHub فایل موردنظر را از پوشه‌ی `molab/` باز یا وارد فضای کاری marimo کنید.
-3. اپلیکیشن را اجرا کنید و دکمه‌ی **«اجرای مدل»** را بزنید.
-4. برای دیدن خروجی و خطاها، **«تازه‌سازی لاگ»** را انتخاب کنید. آماده‌سازی محیط و دانلود مدل‌ها ممکن است زمان‌بر باشد.
-5. برای پایان‌دادن به فرایند، دکمه‌ی **«توقف مدل»** را بزنید.
-6. اگر برنامه و تونل با موفقیت راه‌اندازی شوند، لینک عمومی معمولاً در لاگ‌ها چاپ می‌شود.
-
-**نکته‌ی قالب:** marimo از فایل‌های Python با ساختار مخصوص خود (`.py`) استفاده می‌کند. سه فایل منبع در اپلیکیشن‌های marimo بسته‌بندی شده‌اند تا متن کد اصلی‌شان بازنویسی نشود. هنگام اجرا، متن منبع در فایل موقت نوشته و در یک فرایند جداگانه اجرا می‌شود.
+> رابط MoLab، محدودیت‌های زمان اجرا و نوع GPU در دسترس ممکن است تغییر کنند؛ مراحل بالا به امکانات محیطی که انتخاب می‌کنید بستگی دارند.
 
 ## 💻 پیش‌نیازها
 
-- محیط Linux یا محیط نوت‌بوکی سازگار با اسکریپت.
-- GPU انویدیا و CUDA برای مسیرهایی که در کد به GPU نیاز دارند؛ حافظه‌ی لازم به مدل و تنظیمات بستگی دارد.
-- اینترنت و فضای دیسک کافی برای دریافت مخازن، وابستگی‌ها و وزن‌های مدل.
-- امکان نصب بسته‌های Python و اجرای ابزارهای خط فرمان موردنیاز اسکریپت.
-- دسترسی به سرویس تونل عمومی، اگر اسکریپت برای انتشار رابط به آن نیاز داشته باشد.
+- محیط Python سازگار با اسکریپت و امکان اجرای فرمان‌های خط فرمان؛
+- GPU انویدیا و نسخه‌های سازگار PyTorch/CUDA برای اسکریپت‌هایی که GPU را الزامی می‌دانند؛
+- اینترنت پایدار و فضای دیسک کافی برای دریافت مخازن، وابستگی‌ها و وزن‌های مدل؛
+- حافظهٔ GPU و RAM متناسب با مدل انتخابی؛
+- اجازهٔ نصب بسته‌های Python و اجرای سرویس یا تونل عمومی در محیط مورد استفاده.
+
+**توجه:** داشتن فایل اسکریپت به‌تنهایی به معنی تضمین اجرای موفق مدل نیست. سازگاری کتابخانه‌ها، میزان حافظه، محدودیت‌های محیط میزبانی و تغییرات مخزن بالادستی همگی مؤثرند.
 
 ## 🧰 عیب‌یابی
 
-- **GPU شناسایی نمی‌شود:** GPU را در محیط فعال کنید و سازگاری نسخه‌های PyTorch و CUDA را بررسی کنید.
-- **نصب وابستگی‌ها خطا می‌دهد:** خروجی نصب، نسخه‌ی Python و راهنمای مخزن اصلی را بررسی کنید.
-- **لینک عمومی ظاهر نمی‌شود:** لاگ‌ها را بررسی کنید؛ لینک فقط در صورت راه‌اندازی موفق سرویس و تونل در دسترس خواهد بود.
-- **دانلود یا اجرای مدل طول می‌کشد:** فضای آزاد، اتصال اینترنت، محدودیت‌های محیط و حجم وزن مدل را بررسی کنید.
-- **نام فایل دوم گمراه‌کننده است:** کد `Qwen Image V2 30B-Molab.txt` به NSFQ.SAM اشاره می‌کند؛ نام اصلی فقط برای ردیابی فایل منبع نگهداری شده است.
+| مشکل | کار پیشنهادی |
+|---|---|
+| GPU شناسایی نمی‌شود | نوع سخت‌افزار را روی GPU قرار دهید و سازگاری PyTorch و CUDA را بررسی کنید. |
+| نصب کتابخانه‌ها شکست می‌خورد | خطای کامل نصب، نسخه Python و وابستگی‌های پروژه بالادستی را بررسی کنید. |
+| دانلود مدل طول می‌کشد یا متوقف می‌شود | اتصال اینترنت، فضای آزاد و محدودیت‌های محیط اجرا را بررسی کنید. |
+| لینک عمومی نمایش داده نمی‌شود | لاگ‌های انتهایی را بررسی کنید؛ لینک فقط در صورت بالا آمدن سرویس و موفقیت تونل ایجاد می‌شود. |
+| خطای کمبود حافظه رخ می‌دهد | GPU دیگری با حافظه بیشتر انتخاب کنید یا محدودیت‌های حافظه و تنظیمات مدل را بررسی کنید. |
+| نام فایل دوم با رفتار آن تطبیق ندارد | کد فعلی فایل به `SamTenta/NSFQ.SAM` اشاره می‌کند؛ نام فایل به‌تنهایی معرف مدل اجراشده نیست. |
 
-## 🔄 روند به‌روزرسانی پروژه
+## 🔐 امنیت و مجوزها
 
-مخزن توسط **NeoTenet** به‌مرور به‌روزرسانی می‌شود. برنامه‌ی توسعه می‌تواند شامل این موارد باشد:
+- پیش از اجرا، کد را مرور کنید؛ اسکریپت‌ها ممکن است فرمان‌های shell اجرا کنند، مخازن خارجی را دریافت کنند یا وابستگی‌های جدید نصب کنند.
+- فایل دوم، طبق کد فعلی، یک فایل باینری را نیز از منبع خارجی دریافت می‌کند؛ فقط در صورتی اجرا کنید که به منبع و محتوای پروژه اعتماد دارید.
+- اگر رابط وب از طریق لینک عمومی منتشر شد، اطلاعات خصوصی یا محرمانه در آن وارد نکنید و لینک را با احتیاط به اشتراک بگذارید.
+- مجوز استفاده از هر مدل، مخزن بالادستی و وابستگی ثالث را جداگانه بررسی کنید. مجوز این مخزن لزوماً جایگزین مجوز پروژه‌های اصلی نیست.
+- می‌توانید این مخزن را Fork کنید، کپی بگیرید و برای استفاده شخصی تغییر دهید؛ هنگام انتشار دوباره، شرایط مجوزهای مربوط را رعایت کنید.
 
-- افزودن نسخه‌های تازه‌ی مدل‌ها و ابزارهای تصویر و ویدئو؛
-- اصلاح اسکریپت‌های راه‌اندازی با توجه به تغییرات مخازن اصلی؛
-- به‌روزرسانی روش نصب، اجرا و عیب‌یابی؛
-- اضافه‌کردن نوت‌بوک‌ها یا روش‌های اجرای جدید؛
-- ثبت تغییرات مهم در تاریخچه‌ی Git.
+## 🔄 به‌روزرسانی‌ها
 
-برای دنبال‌کردن به‌روزرسانی‌ها، مخزن را **Watch** کنید یا تاریخچه‌ی **Commits** را بررسی کنید. انتشار نسخه‌های آینده به آماده‌شدن و بررسی آن‌ها بستگی دارد.
-
-## 🔐 امنیت و مجوز استفاده
-
-- قبل از اجرای اسکریپت‌ها، به‌خصوص فرمان‌های shell و دانلود از اینترنت، کد را بررسی کنید.
-- لینک عمومی Gradio یا تونل ممکن است رابط را در اختیار دیگران قرار دهد؛ اطلاعات محرمانه وارد نکنید و لینک را با احتیاط به اشتراک بگذارید.
-- مجوز مدل‌ها، مخازن اصلی و وابستگی‌های ثالث را جداگانه بررسی کنید.
-- می‌توانید این مخزن را Fork یا کپی کنید و برای استفاده‌ی شخصی تغییر دهید؛ هنگام بازنشر، شرایط و مجوزهای پروژه‌های اصلی را رعایت کنید.
+این مجموعه توسط NeoTenet به‌مرور توسعه می‌یابد. تغییرات بعدی می‌تواند شامل اضافه‌شدن پروژه‌های جدید، بهبود راهنمای اجرا، اصلاح سازگاری و به‌روزرسانی پیوندهای مرجع باشد. برای دیدن نسخهٔ تازه، تاریخچهٔ Commitها را بررسی کنید یا مخزن را Watch کنید.
 
 ## 👤 سازنده و ارتباط
 
 **ساخته و نگه‌داری‌شده توسط NeoTenet**  
-📣 کانال تلگرام: [T.me/NeoTenet](https://t.me/NeoTenet)
+تلگرام: [t.me/NeoTenet](https://t.me/NeoTenet)  
+مخزن: [NeoTenet/Neo_Molab_Ai_Model](https://github.com/NeoTenet/Neo_Molab_Ai_Model)
 
-اگر این مجموعه برایتان مفید است، مخزن را ⭐ ستاره‌دار کنید و برای دنبال‌کردن تغییرات آن را Watch کنید.
+---
+
+## 🇬🇧 About the Project
+
+NeoTenet AI Model Collection is an evolving set of Python launch scripts for exploring and starting different AI projects in MoLab and compatible Python/GPU environments. The repository aims to keep the launch scripts organized, explain their practical uses, and make it easier to get started. New projects, compatibility fixes, and documentation updates may be added over time.
+
+### Included scripts
+
+- **Qwen Image 2.1 Turbo-Molab.py** — launches the Gradio-based Qwen-Image-2.1-Turbo environment. The Qwen Image family supports image creation from prompts and image editing workflows, depending on the interface and model version. [Upstream Space](https://huggingface.co/spaces/hugging-apps/qwen-qwen-image-2-1-turbo). The script prepares dependencies and attempts to expose the web interface through a public link.
+- **Qwen Image V2 30B-Molab.py** — important: despite its filename, the current code launches **[SamTenta/NSFQ.SAM](https://huggingface.co/spaces/SamTenta/NSFQ.SAM)**, creates a Python 3.10 environment, and sets up a tunnel. It does not currently launch Qwen Image V2 30B; the script must be corrected before it can accurately be described as that model.
+- **WAN2.2 I2V LIGHTNING-Molab.py** — launches the [Rchoks/wan555](https://huggingface.co/spaces/Rchoks/wan555) Wan 2.2 14B Image-to-Video workflow. It animates an input image using a text prompt, subject to the upstream interface and available hardware.
+
+### Quick start
+
+1. Open [MoLab](https://molab.marimo.io/notebooks) and create a compatible Python environment.
+2. Open/import the desired Python script, or place its contents into a Python cell if direct script execution is unavailable.
+3. Enable a compatible GPU when required, then run the script.
+4. Follow the logs while dependencies and model files are prepared. If the web service starts successfully, its public URL should appear in the output.
+5. Stop the running cell or Python process when finished.
+
+### Requirements and notes
+
+A compatible Python environment, internet access, sufficient disk space and RAM, and a suitable NVIDIA GPU may be required. Model downloads and dependency installation can take time. Successful execution depends on the runtime, library versions, GPU memory and the current state of the upstream projects; it is not guaranteed in every hosted environment.
+
+Review scripts before running them because they may execute shell commands, download code or binaries, install packages and expose a web interface through a public link. Check the license of each upstream project and model before redistributing or using it commercially. Forking and personal customization are welcome, subject to the applicable upstream terms.
+
+**Maintainer:** [NeoTenet](https://github.com/NeoTenet) · **Telegram:** [t.me/NeoTenet](https://t.me/NeoTenet)
 
 ---
 
 <div align="center">
 
-**NeoTenet — AI Models, Tools & Updates** 💎
+**NeoTenet — AI Tools, Models & Updates 💎**
 
 </div>
