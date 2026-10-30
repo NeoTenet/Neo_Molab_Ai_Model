@@ -1,10 +1,11 @@
-# @title NeoTenet Web Terminal Workspace (Pinggy Auto-Clean & Fallback Fixed)
-# @markdown Automatically kills stale Pinggy sessions and adds SSH fallback to guarantee link generation on repeated runs.
+# @title NeoTenet Web Terminal Workspace (Pinggy 100% Fixed + SSH Fallback + No Drive)
+# @markdown Installs openssh-client, fixes Pinggy regex & API parsing, removes Drive backup.
 
 import os
 import re
 import time
 import subprocess
+import urllib.request
 from pathlib import Path
 
 class NeoTenetEnvironment:
@@ -39,7 +40,8 @@ echo ""
             shell=True
         )
 
-        packages = ["htop", "curl", "wget", "git", "python3-pip"]
+        # اضافه شدن openssh-client جهت تضمین کارکرد تونل SSH پینگی
+        packages = ["openssh-client", "htop", "curl", "wget", "git", "python3-pip"]
         subprocess.run(
             f"apt-get update -qq && apt-get install -y {' '.join(packages)} -qq",
             shell=True,
@@ -47,13 +49,13 @@ echo ""
             stderr=subprocess.DEVNULL
         )
 
-        # نصب پینگی برای پایتون
+        # نصب کتابخانه پایتون پینگی
         subprocess.run(
             f"{os.sys.executable} -m pip install -q --upgrade pinggy",
             shell=True
         )
 
-        # دانلود ttyd
+        # دانلود باینری ttyd
         ttyd_dest = "/usr/local/bin/ttyd"
         if not os.path.exists(ttyd_dest):
             subprocess.run(
@@ -63,17 +65,13 @@ echo ""
 
     def terminate_old_processes(self):
         print("🧹 Cleaning old sessions & releasing network ports...")
-        # ۱. آزاد کردن پورت 7681
         subprocess.run(f"fuser -k {self.port}/tcp > /dev/null 2>&1 || true", shell=True)
+        subprocess.run(f"fuser -k 4300/tcp > /dev/null 2>&1 || true", shell=True)
         subprocess.run(["pkill", "-9", "-f", "ttyd"], stderr=subprocess.DEVNULL)
-        
-        # ۲. بستن کامل نشست‌های قبلی پینگی در حافظه (علت اصلی خطای دفعه دوم)
         subprocess.run("pkill -9 -f pinggy > /dev/null 2>&1 || true", shell=True)
         subprocess.run("pkill -9 -f a.pinggy.io > /dev/null 2>&1 || true", shell=True)
         subprocess.run("rm -rf /tmp/pinggy* /tmp/.pinggy* > /dev/null 2>&1 || true", shell=True)
-        
-        # ۳. مهلت به سرورهای پینگی برای قطع کامل ارتباط قبلی
-        time.sleep(3)
+        time.sleep(2)
 
     def initialize_services(self):
         print("🌐 [Phase 2] Deploying ttyd web console...")
@@ -90,21 +88,13 @@ echo ""
 
     def start_pinggy_tunnel(self):
         print("💎 [Phase 3] Generating secure Pinggy tunnel...")
-        import pinggy
-        
-        # تلاش اول با کتابخانه رسمی پایتون
-        tunnel = None
-        try:
-            tunnel = pinggy.start_tunnel(forwardto=f"localhost:{self.port}", force=True)
-        except Exception:
-            try:
-                tunnel = pinggy.start_tunnel(forwardto=f"localhost:{self.port}")
-            except Exception:
-                pass
-
         endpoint = None
-        if tunnel:
-            for _ in range(25):
+
+        # تلاش ۱: استفاده از SDK پایتون پینگی
+        try:
+            import pinggy
+            tunnel = pinggy.start_tunnel(forwardto=f"localhost:{self.port}")
+            for _ in range(12):
                 if hasattr(tunnel, "urls") and tunnel.urls:
                     for u in tunnel.urls:
                         if isinstance(u, str) and u.startswith("https://") and "dashboard" not in u:
@@ -113,27 +103,44 @@ echo ""
                 if endpoint:
                     break
                 time.sleep(1)
+        except Exception:
+            pass
 
-            if not endpoint and hasattr(tunnel, "urls") and tunnel.urls:
-                endpoint = tunnel.urls[0]
-
-        # تلاش دوم (پشتیبان اضطراری SSH): اگر روش اول لینک نداد، با SSH فوراً لینک می‌گیرد
+        # تلاش ۲ (تضمینی): پروتکل SSH با وب‌دیباگر و ریجکس هوشمند
         if not endpoint:
-            print("⏳ Switching to Pinggy Direct Link protocol...")
+            print("⏳ Connecting via Pinggy Native SSH Protocol...")
             ssh_log = Path("/tmp/pinggy_ssh.log")
             if ssh_log.exists():
                 ssh_log.unlink()
-            
+
+            # اجرای تونل معکوس SSH با فوروارد پورت دیباگر 4300 جهت دریافت قطعی لینک
             subprocess.Popen(
-                f"ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -p 443 -R0:localhost:{self.port} free@a.pinggy.io > /tmp/pinggy_ssh.log 2>&1",
+                f"ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=10 "
+                f"-R0:localhost:{self.port} -L4300:localhost:4300 free@a.pinggy.io > /tmp/pinggy_ssh.log 2>&1",
                 shell=True
             )
-            
-            for _ in range(15):
+
+            for _ in range(20):
                 time.sleep(1)
+                # بررسی API پینگی روی پورت 4300
+                try:
+                    with urllib.request.urlopen("http://localhost:4300/urls", timeout=1) as resp:
+                        import json
+                        data = json.loads(resp.read().decode())
+                        for u in data.get("urls", []):
+                            if u.startswith("https://"):
+                                endpoint = u
+                                break
+                except Exception:
+                    pass
+
+                if endpoint:
+                    break
+
+                # بررسی مستقیم فایل لاگ با ریجکس جامع
                 if ssh_log.exists():
                     text = ssh_log.read_text()
-                    found = re.findall(r'https://[a-zA-Z0-9-]+\.free\.pinggy\.link|https://[a-zA-Z0-9-]+\.free\.pinggy\.net', text)
+                    found = re.findall(r'https://[^\s<>"\']+(?:pinggy\.link|pinggy\.net|pinggy\.io|pinggy-free\.link)', text)
                     if found:
                         endpoint = found[0]
                         break
@@ -151,7 +158,7 @@ echo ""
         print("\n" + "═" * 55)
         print("  💎 NEOTENET WEB TERMINAL IS ACTIVE")
         print("═" * 55)
-        print(f"  🚀 ACCESS LINK : {url if url else 'Failed to generate Pinggy link'}")
+        print(f"  🚀 ACCESS LINK : {url if url else 'خطا در تولید لینک، مجدد Run کنید'}")
         print("═" * 55 + "\n")
         print("👈 روی لینک بالا کلیک کنید تا محیط خط فرمان ترمینال در مرورگر باز شود.")
 
