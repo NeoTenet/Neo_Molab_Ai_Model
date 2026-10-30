@@ -33,7 +33,8 @@
 ## 🖼️ بنرهای پروژه‌ها
 
 ### Qwen Image 2.1 Turbo
-<img src="qwen-image-2-1-turbo.png" alt="Qwen Image 2.1 Turbo banner" width="100%">
+<img src="Neon Qwen Image 2.1 Turbo Showcase.png
+" alt="Qwen Image 2.1 Turbo banner" width="100%">
 
 ### Qwen Image V2 30B
 <img src="qwen-image-v2-30b.png" alt="Qwen Image V2 30B banner" width="100%">
